@@ -1,5 +1,5 @@
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-from langchain.schema import HumanMessage, SystemMessage, AIMessage
+from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 
 from config import (
     OPENAI_API_KEY,
