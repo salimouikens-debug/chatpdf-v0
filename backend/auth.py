@@ -21,10 +21,10 @@ async def get_current_user(request: Request) -> str:
     """FastAPI dependency: returns user ID from JWT, or 'anonymous' if no token."""
     auth_header = request.headers.get("Authorization")
     if not auth_header or not auth_header.startswith("Bearer "):
-        return ANONYMOUS_USER_ID
-
-    token = auth_header.split(" ", 1)[1]
-    if not token:
+        # Check for anonymous session ID
+        anon_id = request.headers.get("X-Anon-Session-Id")
+        if anon_id:
+            return anon_id
         return ANONYMOUS_USER_ID
 
     try:
