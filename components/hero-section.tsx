@@ -15,7 +15,7 @@ function useTypewriter(phrases: string[]) {
   const [displayed, setDisplayed] = useState("");
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const currentPhrase = phrases[phraseIndex];
@@ -42,7 +42,11 @@ function useTypewriter(phrases: string[]) {
     };
 
     timeoutRef.current = setTimeout(tick, isDeleting ? DELETING_SPEED : TYPING_SPEED);
-    return () => clearTimeout(timeoutRef.current);
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
   }, [displayed, isDeleting, phraseIndex, phrases]);
 
   return displayed;
