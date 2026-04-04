@@ -3,7 +3,7 @@ uvicorn==0.34.0
 python-multipart==0.0.20
 langchain>=0.3.14
 langchain-openai>=0.3.0
-langchain-pinecone>=0.2.3
+langchain-pinecone
 langchain-text-splitters>=0.3.4
 pinecone-client>=6.0.0
 pypdf2>=3.0.1
