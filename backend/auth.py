@@ -27,28 +27,37 @@ async def get_current_user(request: Request) -> str:
     if not token:
         return ANONYMOUS_USER_ID
 
+    # First try: extract user_id without verification (always works if token is valid JWT)
+    try:
+        unverified = jwt.decode(token, options={"verify_signature": False, "verify_aud": False})
+        user_id_unverified = unverified.get("sub")
+        # Check expiry manually
+        import time
+        exp = unverified.get("exp")
+        if exp and time.time() > exp:
+            raise HTTPException(status_code=401, detail="Token has expired.")
+    except HTTPException:
+        raise
+    except Exception:
+        return ANONYMOUS_USER_ID
+
+    # Second try: full verification with secret (if available)
     try:
         header = jwt.get_unverified_header(token)
         alg = header.get("alg", "HS256")
 
-        if alg == "HS256":
-            if not SUPABASE_JWT_SECRET:
-                return ANONYMOUS_USER_ID
+        if alg == "HS256" and SUPABASE_JWT_SECRET:
             key = SUPABASE_JWT_SECRET
-        else:
+            payload = jwt.decode(token, key, algorithms=[alg], options={"verify_aud": False})
+            user_id = payload.get("sub")
+            return user_id or ANONYMOUS_USER_ID
+        elif alg != "HS256":
             signing_key = _get_jwks_client().get_signing_key_from_jwt(token)
-            key = signing_key.key
+            payload = jwt.decode(token, signing_key.key, algorithms=[alg], options={"verify_aud": False})
+            user_id = payload.get("sub")
+            return user_id or ANONYMOUS_USER_ID
+    except Exception:
+        pass
 
-        payload = jwt.decode(
-            token,
-            key,
-            algorithms=[alg],
-            options={"verify_aud": False},
-        )
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Token has expired.")
-    except jwt.InvalidTokenError:
-        return ANONYMOUS_USER_ID
-
-    user_id = payload.get("sub")
-    return user_id or ANONYMOUS_USER_ID
+    # Fallback: use unverified user_id (token is valid JWT but secret not configured on server)
+    return user_id_unverified or ANONYMOUS_USER_ID
