@@ -266,7 +266,7 @@ async def quiz_endpoint(request: QuizRequest, user_id: str = Depends(get_current
 
 import json as _json
 from openai import AsyncOpenAI as _AsyncOpenAI
-from config import OPENAI_API_KEY as _OPENAI_API_KEY
+from backend.config import OPENAI_API_KEY as _OPENAI_API_KEY
 
 @app.post("/api/ai-detect")
 async def ai_detect_endpoint(request: AiDetectRequest, user_id: str = Depends(get_current_user)):
