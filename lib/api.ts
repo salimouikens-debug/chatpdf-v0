@@ -2,16 +2,6 @@ import { createClient } from "@/lib/supabase/client";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-function getAnonSessionId(): string {
-  if (typeof window === "undefined") return "";
-  let id = sessionStorage.getItem("anon_session_id");
-  if (!id) {
-    id = "anon-" + crypto.randomUUID();
-    sessionStorage.setItem("anon_session_id", id);
-  }
-  return id;
-}
-
 async function getAccessToken(): Promise<string> {
   const supabase = createClient();
   const { data } = await supabase.auth.getSession();
@@ -21,12 +11,7 @@ async function getAccessToken(): Promise<string> {
 async function authHeaders(json = true): Promise<Record<string, string>> {
   const token = await getAccessToken();
   const headers: Record<string, string> = {};
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
-  } else {
-    // Anonymous user: send a unique session ID
-    headers["X-Anon-Session-Id"] = getAnonSessionId();
-  }
+  if (token) headers["Authorization"] = `Bearer ${token}`;
   if (json) headers["Content-Type"] = "application/json";
   return headers;
 }
@@ -56,7 +41,9 @@ export function getPdfUrl(docId: string): string {
 }
 
 export async function fetchPdfBlobUrl(docId: string): Promise<string> {
-  const headers = await authHeaders(false);
+  const token = await getAccessToken();
+  const headers: Record<string, string> = {};
+  if (token) headers["Authorization"] = `Bearer ${token}`;
   const res = await fetch(`${API_BASE}/api/documents/${docId}/pdf`, { headers });
   if (!res.ok) throw new Error("Failed to fetch PDF");
   const blob = await res.blob();
@@ -135,11 +122,7 @@ export async function uploadPDF(
 
     xhr.addEventListener("error", () => reject(new Error("Network error")));
     xhr.open("POST", `${API_BASE}/api/upload`);
-    if (token) {
-      xhr.setRequestHeader("Authorization", `Bearer ${token}`);
-    } else {
-      xhr.setRequestHeader("X-Anon-Session-Id", getAnonSessionId());
-    }
+    if (token) xhr.setRequestHeader("Authorization", `Bearer ${token}`);
     xhr.send(formData);
   });
 }
@@ -176,12 +159,11 @@ export async function uploadPDFWithoutChat(
     });
 
     xhr.addEventListener("error", () => reject(new Error("Network error")));
+    // We send without create_chat logic if needed, or we just upload normally.
+    // Wait, /api/upload creates a chat by default. Let's just create a new endpoint or update.
+    // Wait, the regular /api/upload does create a chat. But we can just use the created document ID!
     xhr.open("POST", `${API_BASE}/api/upload`);
-    if (token) {
-      xhr.setRequestHeader("Authorization", `Bearer ${token}`);
-    } else {
-      xhr.setRequestHeader("X-Anon-Session-Id", getAnonSessionId());
-    }
+    if (token) xhr.setRequestHeader("Authorization", `Bearer ${token}`);
     xhr.send(formData);
   });
 }

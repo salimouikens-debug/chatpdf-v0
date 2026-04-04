@@ -1,0 +1,19 @@
+{
+  "Date": "Sat, 04 Apr 2026 23:11:57 GMT",
+  "Content-Type": "text/plain; charset=utf-8",
+  "Transfer-Encoding": "chunked",
+  "Connection": "keep-alive",
+  "access-control-allow-credentials": "true",
+  "access-control-allow-headers": "X-Anon-Session-Id",
+  "access-control-allow-methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT",
+  "access-control-allow-origin": "https://chatpdf-v0.vercel.app",
+  "access-control-max-age": "600",
+  "rndr-id": "70961089-7125-4d86",
+  "vary": "Origin, Accept-Encoding",
+  "x-render-origin-server": "uvicorn",
+  "cf-cache-status": "DYNAMIC",
+  "Server": "cloudflare",
+  "CF-RAY": "9e73fec0d97333c9-ORN",
+  "Content-Encoding": "gzip",
+  "alt-svc": "h3=\":443\"; ma=86400"
+}
