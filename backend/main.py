@@ -1,13 +1,13 @@
-from contextlib import asynccontextmanager
+from backend.contextlib import asynccontextmanager
 
-from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Depends
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse, Response, JSONResponse
-from pydantic import BaseModel
+from backend.fastapi import FastAPI, UploadFile, File, Form, HTTPException, Depends
+from backend.fastapi.middleware.cors import CORSMiddleware
+from backend.fastapi.responses import StreamingResponse, Response, JSONResponse
+from backend.pydantic import BaseModel
 
-from config import MAX_FILE_SIZE_MB
-from auth import get_current_user
-from database import (
+from backend.config import MAX_FILE_SIZE_MB
+from backend.auth import get_current_user
+from backend.database import (
     init_db,
     db_get_document,
     db_get_pdf_data,
@@ -23,8 +23,8 @@ from database import (
     db_export_chat,
     db_attach_document_to_chat,
 )
-from pdf_processor import process_pdf, delete_document, list_documents
-from rag_engine import chat, chat_stream, summarize, generate_quiz
+from backend.pdf_processor import process_pdf, delete_document, list_documents
+from backend.rag_engine import chat, chat_stream, summarize, generate_quiz
 
 
 @asynccontextmanager
@@ -265,8 +265,8 @@ async def quiz_endpoint(request: QuizRequest, user_id: str = Depends(get_current
 
 
 import json as _json
-from openai import AsyncOpenAI as _AsyncOpenAI
-from config import OPENAI_API_KEY as _OPENAI_API_KEY
+from backend.openai import AsyncOpenAI as _AsyncOpenAI
+from backend.config import OPENAI_API_KEY as _OPENAI_API_KEY
 
 @app.post("/api/ai-detect")
 async def ai_detect_endpoint(request: AiDetectRequest, user_id: str = Depends(get_current_user)):
