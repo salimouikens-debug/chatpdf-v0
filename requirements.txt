@@ -1,11 +1,6 @@
 fastapi
-uvicorn
-langchain
-langchain-community
-langchain-openai
-langchain-pinecone
-pinecone-client
+uvicorn[standard]
 openai
 python-dotenv
-pydantic
 requests
+pydantic
