@@ -27,6 +27,10 @@ async def get_current_user(request: Request) -> str:
             return anon_id
         return ANONYMOUS_USER_ID
 
+    token = auth_header.split(" ", 1)[1]
+    if not token:
+        return ANONYMOUS_USER_ID
+
     try:
         header = jwt.get_unverified_header(token)
         alg = header.get("alg", "HS256")
