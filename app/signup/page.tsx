@@ -70,6 +70,14 @@ export default function SignupPage() {
       return;
     }
 
+    // If Supabase returns a session, email confirmation is disabled — go straight to dashboard
+    if (data?.session) {
+      router.push("/dashboard");
+      router.refresh();
+      return;
+    }
+
+    // Otherwise, email confirmation is required — show OTP screen
     setSuccess(true);
     setLoading(false);
   }
