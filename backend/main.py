@@ -1,9 +1,9 @@
-from backend.contextlib import asynccontextmanager
+from contextlib import asynccontextmanager
 
-from backend.fastapi import FastAPI, UploadFile, File, Form, HTTPException, Depends
-from backend.fastapi.middleware.cors import CORSMiddleware
-from backend.fastapi.responses import StreamingResponse, Response, JSONResponse
-from backend.pydantic import BaseModel
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Depends
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse, Response, JSONResponse
+from pydantic import BaseModel
 
 from backend.config import MAX_FILE_SIZE_MB
 from backend.auth import get_current_user
