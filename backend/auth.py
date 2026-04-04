@@ -52,7 +52,3 @@ async def get_current_user(request: Request) -> str:
 
     user_id = payload.get("sub")
     return user_id or ANONYMOUS_USER_ID
-        return ANONYMOUS_USER_ID
-
-    user_id = payload.get("sub")
-    return user_id or ANONYMOUS_USER_ID
