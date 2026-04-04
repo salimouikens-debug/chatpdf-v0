@@ -42,6 +42,7 @@ app.add_middleware(
         "http://localhost:3001",
         "http://localhost:3002",
         "http://localhost:3003",
+        "https://chatpdf-v0.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
