@@ -219,6 +219,11 @@ chatpdf-v0/
 
 ## Changelog
 
+### v5.1 -- Auth Stability & Deployment Readiness (2026-04-05)
+- **Auth Robustness**: Fixed an issue in `auth.py` where JWT tokens were sometimes missing for logged-in users, causing upload endpoints, history, and DB operations to crash with 500 errors.
+- **Environment Parity**: Ensured seamless Supabase production credential synchronization across both Vercel (Frontend) and Render (Backend) to prevent database mismatch errors.
+- **Syntax Fixes**: Cleaned up duplicated and malformed code blocks in JWT parsing and API endpoints.
+
 ### v5.0 -- Premium Light Mode & Landing Page Redesign (2026-04-03)
 - **Full-bleed Video Background**: Video now covers the entire main area (header + content) on the dashboard home screen. Header is fully transparent over the video so the background extends edge-to-edge.
 - **Adaptive Header**: Header automatically switches between transparent (on video/home screen) and solid white glass (`bg-white/80 backdrop-blur-xl`) when in chat/quiz/summary mode. Text and button colors adapt accordingly (white on video, dark on solid bg).
